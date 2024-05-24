@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Tool</title>
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Playball&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/owl.carousel.min.css' %}" rel="stylesheet">
+
+   
+    <style>
+        body {
+            font-family: 'Coms Sans Ms',cursive;
+
+            background: linear-gradient(to bottom, #000000 0%, #121212 100%);
+            color: #ffffff; 
+        }
+
+        .loading {
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%;
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            z-index: 1000;
+            font-family: 'Pacifico', cursive; 
+            color: white;   
+        }
+        
+        .loading h1 {
+            font-weight: bold;
+        }
+
+
+        .landing-containerbox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+      
+        /* .containerbox {
+            display: none;
+            background-color: #ffffff;
+            
+        } */
+
+        .containerbox {
+            display: none;
+            background-color: rgb(250, 250, 250); 
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); 
+            /* background-image: url('static/images/567.jpg'); */
+            /* background-image: url('static/images/white.jpg'); */
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url("https://images.unsplash.com/photo-1465146633011-14f8e0781093?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3450&q=80") #111111;
+        }
+        /* .containerbox {
+            display: none;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url("https://images.unsplash.com/photo-1465146633011-14f8e0781093?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3450&q=80") #111111;
+               
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); 
+            position: relative;
+        } */
+
+        .containerbox.loaded {
+            display: block;
+        }
+        
+        #navbar {
+            animation: dropAndShake 0.5s ease-in-out;
+        }
+
+        @keyframes dropAndShake {
+            0% {
+                transform: translateY(-100%);
+            }
+            50% {
+                transform: translateY(10%);
+            }
+            100% {
+                transform: translateY(0%);
+            }
+        }
+
+        .container-fluid .col-lg-7 h1 {
+            font-size: 4rem !important;
+            font-family: 'Times New Roman', cursive;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            z-index: 99;
+        }
+
+        h1, h2, h3, .h1, .h2, .h3 {
+            font-weight: 400 !important;
+            font-family: 'Playball', cursive !important;
+        }
+
+        h4, h5, h6, .h4, .h5, .h6 {
+            font-weight: 600 !important;
+            font-family: 'Open Sans', sans-serif !important;
+        }
+
+        .my-6 {
+            margin-top: 6rem;
+            margin-bottom: 6rem;
+        }
+
+        .py-6 {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+
+        .wow,
+        .animated {
+            animation-duration: 2s !important;
+        }
+
+        .btn.btn-primary {
+            border: 0;
+        }
+
+        .btn.btn-primary:hover {
+            background: var(--bs-dark) !important;
+            color: var(--bs-primary) !important;
+        }
+
+        .btn {
+            font-weight: 600;
+            transition: .5s;
+
+            background-color: #333333; 
+            color: #ffffff; 
+            border-color: #ffffff; 
+        }
+
+        .btn-square {
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn-sm-square {
+            width: 38px;
+            height: 38px;
+        }
+
+        .btn-md-square {
+            width: 44px;
+            height: 44px;
+        }
+
+        .btn-lg-square {
+            width: 56px;
+            height: 56px;
+        }
+
+        .btn-square,
+        .btn-sm-square,
+        .btn-md-square,
+        .btn-lg-square {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: normal;
+        }
+
+        .nav-bar {
+            background: var(--bs-light);
+            border-bottom: 1px solid rgba(0, 0, 0, .05);
+        }
+
+        .navbar .navbar-nav .nav-link {
+            padding: 10px 12px;
+            font-weight: 600;
+            font-size: 17px;
+            transition: .5s;
+        }
+
+        .navbar .navbar-nav .nav-link:hover,
+        .navbar .navbar-nav .nav-link.active {
+            color: var(--bs-primary);
+        }
+
+        .navbar .dropdown-toggle::after {
+            border: none;
+            content: "\f107";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 700;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        @media (min-width: 1200px) {
+            .navbar .nav-item .dropdown-menu {
+                display: block;
+                visibility: hidden;
+                top: 100%;
+                transform: rotateX(-75deg);
+                transform-origin: 0% 0%;
+                transition: .5s;
+                opacity: 0;
+            }
+            
+            .navbar .nav-item:hover .dropdown-menu {
+                transform: rotateX(0deg);
+                visibility: visible;
+                opacity: 1;
+            }
+        }
+
+        .dropdown .dropdown-menu a:hover {
+            background: var(--bs-primary);
+            color: var(--bs-white);
+        }
+
+        #searchModal .modal-content {
+            background-color: rgba(255, 255, 255, .95);
+        }
+
+        /* .service {
+            background-color: #f8f9fade; 
+        } */
+
+        .service .service-item {
+            position: relative;
+            color: #000000;
+            border-radius: 8px;
+            box-shadow: 0 0 45px rgba(0, 0, 0, .08);
+        }
+        
+
+        .service-content::after {
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 0;
+            top: 0;
+            left: 0;
+            bottom: auto;
+            background-color: #006D77; 
+            border: 1px solid #006D77; 
+            border-radius: 8px;
+            transition: 1s;
+            
+        }
+
+        .service-item:hover .service-content::after {
+            height: 100%;
+            opacity: 1;
+        }
+
+        .service-item .service-content-icon {
+            position: relative;
+            z-index: 2;
+        }
+
+        .service-content-icon i {
+            color: #006D77;
+        }
+
+        .service-item .service-content-icon i,
+        .service-item .service-content-icon p {
+            transition: 1s;
+            color: #000000;
+        }
+
+        .service-item:hover .service-content-icon i {
+            color: #006D77 !important;
+        }
+
+        .service-item:hover .service-content-icon p {
+            color: var(--bs-white);
+            
+        }
+
+        .service-item:hover .service-content-icon a.btn-primary {
+            background: var(--bs-white);
+            color: #006D77;
+        }
+
+        .service-item .service-content-icon a.btn-primary {
+            transition: 1s !important;
+        } 
+        
+    
+        .testimonial-item {
+            border: 1px solid var(--bs-primary);
+            padding: 20px 20px;
+        }
+
+        .testimonial-carousel .owl-item img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .testimonial-carousel.owl-rtl .testimonial-item {
+            direction: ltr !important;
+        }
+
+
+        .team-item {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .team-item .team-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .team-item .team-icon .share-link {
+            opacity: 0;
+            transition: 0.9s;
+        }
+
+        .team-item:hover .share-link {
+            opacity: 1;
+        }
+
+        .team-item .team-content {
+            transition: 0.9s;
+        }
+
+        .team-item:hover .team-content {
+            background: var(--bs-primary) !important;
+            color: var(--bs-dark) !important;
+        }
+
+        .team-item .team-content h4,
+        .team-item .team-content p {
+            transition: 0.5s;
+        }
+
+        .team-item:hover .team-content h4 {
+            color: var(--bs-dark) !important;
+        }
+
+        .team-item:hover .team-content p {
+            color: var(--bs-white);
+        }
+
+        .team-item .img-fluid {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        
+        .video {
+            position: relative;
+            min-height: 400px;
+            background: linear-gradient(rgba(254, 218, 154, 0.1), rgba(254, 218, 154, 0.1)), url('../static/images/a3.jpg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 8px;
+        }
+
+        
+        .video .btn-play {
+            position: absolute;
+            z-index: 3;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-sizing: content-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 90px;
+            height: 90px; 
+            border-radius: 50%;
+            border: 3px solid black; 
+            outline: none;
+            background-color: white; 
+        }
+
+        .video .btn-play:before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: var(--bs-primary);
+            border-radius: 50%;
+            animation: pulse-border 1500ms ease-out infinite;
+        }
+
+        .video .btn-play img {
+            position: relative;
+            z-index: 3;
+           
+        }
+
+        .video .btn-play span {
+            display: block;
+            position: relative;
+            z-index: 3;
+            width: 0;
+            height: 0;
+            border-left: 52px solid black; 
+            border-top: 32px solid transparent;
+            border-bottom: 32px solid transparent;
+        }
+
+
+        @keyframes pulse-border {
+            0% {
+                transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        #videoModal {
+            z-index: 99999;
+            color: #000000;
+        }
+
+        #videoModal .modal-dialog {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            margin: 30px auto;
+        }
+
+        #videoModal .modal-body {
+            position: relative;
+            padding: 0px;
+            justify-content: center;
+            align-items: center; 
+           
+            
+        }
+
+        #videoModal .close {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            right: 0px;
+            top: -30px;
+            z-index: 999;
+            font-size: 30px;
+            font-weight: normal;
+            color: #FFFFFF;
+            background: #000000;
+            opacity: 1;
+        }
+
+        .ratio-16x9 {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-top: 56.25%; 
+        }
+
+        .ratio-16x9 iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .event .tab-class .nav-item a.active {
+            background: var(--bs-primary) !important;
+        }
+
+        .event .event-img .event-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: #006D77;
+            border-radius: 8px;
+            transition: 0.5s;
+            opacity: 0;
+            z-index: 1;
+
+        }
+
+        .event-img {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 30px; 
+        }
+
+        .event-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event .event-img:hover .event-overlay {
+            opacity: 1;
+        }
+        .testimonial-item {
+            border: 1px solid var(--bs-primary);
+            padding: 20px 20px;
+        }
+
+        .testimonial-carousel .owl-item img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .testimonial-carousel.owl-rtl .testimonial-item {
+            direction: ltr !important;
+        }
+
+        .carousel {
+            /* background-image: url('static/images/1234.jpg'); */
+            background-size: cover; /* Adjust as needed */
+            background-position: center; /* Adjust as needed */
+            /* Additional styling for the carousel if needed */
+            color: rgb(255, 255, 255);
+        }
+
+ 
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: auto;
+            height: auto;
+            background: none;
+            border: none;
+            font-size: 3rem;
+            color: #000;
+            text-shadow: none;
+            outline: none;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-image: none;
+        }
+
+        .carousel-control-prev {
+            left: 0;
+        }
+
+        .carousel-control-next {
+            right: 0;
+        }
+
+        .btn-outline-custom:hover {
+            color: #fff; /* Change text color on hover */
+            background-color: #006D77; /* Change background color on hover */
+            border-color: #006D77; /* Change border color on hover */
+        }
+
+        .footer-item {
+            color: #000000; 
+        }
+
+        .bg-custom {
+            background-color: #006D77; 
+        }
+
+        .bg-light.border.border-custom {
+            background-color: #006D77; 
+            border-color: #006D77;
+        }
+
+        .border-custom {
+            /* border-color: #006D77; */
+            border-color: #006D77 ;
+        }
+
+        .btn-custom {
+            background-color: #006D77;
+            border-color: #006D77;
+        }
+
+        .btn-custom:hover {
+            background-color: #006D77;
+            border-color: #006D77; 
+        }
+
+        .text-custom {
+            color: #006D77;
+        }
+
+        .btn-custom {
+            background-color: #006D77;
+            border-color: #006D77;
+        }
+
+        .btn-custom:hover {
+            background-color: #006D77; 
+            border-color: #006D77; 
+        }
+
+        /* .contact {
+            background-color: #f3f6f8b9; 
+        } */
+        
+        @media (max-width: 575px) {
+            .container-fluid .col-lg-7 h1 {
+                font-size: 2rem !important;
+            }
+            .container-fluid.contact {
+                padding-top: 4rem; 
+                padding-bottom: 4rem;
+            }
+
+            .container-fluid.contact .container {
+                padding-left: 0;
+                padding-right: 0; 
+            }
+
+            .container-fluid.contact .row {
+                flex-direction: column; 
+            }
+
+            .container-fluid.contact .col-1 {
+                display: none; 
+            }
+
+            .container-fluid.contact .col-10 {
+                flex: 0 0 100%;
+                max-width: 100%; 
+                margin-left: auto; 
+                margin-right: auto; 
+            }
+
+            .container-fluid.contact .form {
+                padding-left: 15px; 
+                padding-right: 15px; 
+            }  
+            .container-fluid.contact button[type="submit"] {
+                margin-top: -60px; 
+            }
+
+            #videoModal .modal-dialog {
+                width: 90%; 
+                max-width: none; 
+                margin: 30px auto; 
+                height: auto;
+            }
+        } 
+   
+
+    </style>
+</head>
+
+<body>
+    <div class="landing-container">
+        <div class="loading">
+            <h1 class="text-custom fw-bold mb-0">Audit<span class="text-dark">Nest...</span></h1>
+        </div>
+    </div>
+
+    <div class="containerbox">
+        <!-- Navbar start -->
+        <!-- <div class="container-fluid nav-bar">
+            <div class="container">
+                <nav class="navbar navbar-light navbar-expand-lg py-4">
+                    <a href="{% url 'landing_page' %}" class="navbar-brand">
+                        <h1 class="text-primary fw-bold mb-0">Audit<span class="text-dark">Nest</span></h1>
+                    </a>
+                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars text-primary"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <div class="navbar-nav mx-auto">
+                            <a href="{% url 'landing_page' %}" class="nav-item nav-link active">Home</a>
+                            <a href="" class="nav-item nav-link">About Us</a>
+                            <a href="" class="nav-item nav-link">Services</a>
+                            <a href="" class="nav-item nav-link">Events</a>
+                            
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                                <div class="dropdown-menu bg-light">
+                                    <a href="" class="dropdown-item">Booking</a>
+                                    <a href="" class="dropdown-item">Our Blog</a>
+                                    <a href="" class="dropdown-item">Our Team</a>
+                                    <a href="" class="dropdown-item">Testimonial</a>
+                                    
+                                </div>
+                            </div>
+                            <a href="" class="nav-item nav-link">Contact</a>
+                        </div>
+                        <a href="" class="btn btn-primary py-2 px-4 d-none d-xl-inline-block rounded-pill">Try Now</a>
+                    </div>
+                </nav>
+            </div>
+        </div>         -->
+        <!-- Navbar End -->
+
+        <!-- Carousel Start -->
+        <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-interval="1000">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container-fluid py-6 my-6 mt-0">
+                        <div class="container">
+                            <div class="row g-5 align-items-center">
+                                <div class="col-lg-7 col-md-12">
+                                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-custom rounded-pill px-4 py-1 mb-4 animated bounceInDown" style="color: #006D77; border-color: #006D77;">Welcome to AuditNest</small>
+                                    <h1 class="display-1 mb-4 animated bounceInDown">Transform Your Auditing Process with <span style="color: #006D77">Audit</span><span style="color: #333;">Nest</span></h1>
+                                    <a href="#" class="btn btn-primary border-0 rounded-pill py-3 px-4 px-md-5 me-4 animated bounceInLeft">Start Auditing</a>
+                                    <a href="#" class="btn btn-primary border-0 rounded-pill py-3 px-4 px-md-5 animated bounceInLeft">Learn More</a>
+                                </div>
+                                <div class="col-lg-5 col-md-12">
+                                    <img src="{% static 'images/45.png' %}" class="img-fluid rounded animated zoomIn" alt="AuditNest">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="container-fluid py-6 my-6 mt-0">
+                        <div class="container">
+                            <div class="row g-5 align-items-center">
+                                <div class="col-lg-7 col-md-12">
+                                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-4 animated bounceInDown">Welcome to AuditNest</small>
+                                    <h1 class="display-1 mb-4 animated bounceInDown">Try Our Auditing Tool for Free!</h1>
+                                    <p class="lead mb-4 animated bounceInDown">Sign up now and get a one-day free trial to experience the power of AuditNest. Streamline your auditing process with ease.</p>
+                                    <a href="#" class="btn btn-primary border-0 rounded-pill py-3 px-4 px-md-5 me-4 animated bounceInLeft">Start Free Trial</a>
+                                    <a href="#" class="btn btn-outline-custom border-0 rounded-pill py-3 px-4 px-md-5 animated bounceInLeft">Try Demo</a>
+                                </div>
+                                <div class="col-lg-5 col-md-12">
+                                    <img src="{% static 'images/45.png' %}" class="img-fluid rounded animated zoomIn" alt="Carousel Image">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+                <!-- Third Carousel Item -->
+                <div class="carousel-item">
+                    <div class="container-fluid py-6 my-6 mt-0">
+                        <div class="container">
+                            <div class="row g-5 align-items-center">
+                                <div class="col-lg-7 col-md-12">
+                                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-4 animated bounceInDown">Welcome to AuditNest</small>
+                                    <h1 class="display-1 mb-4 animated bounceInDown">Explore Our Wide Range of Audit Tools</h1>
+                                    <p class="lead mb-4 animated bounceInDown">With AuditNest, you have access to a diverse set of audit tools tailored to your specific needs. Whether you require financial auditing, compliance checks, risk assessment, or performance evaluation, we have you covered.</p>
+                                    <a href="#" class="btn btn-primary border-0 rounded-pill py-3 px-4 px-md-5 me-4 animated bounceInLeft">Start Auditing</a>
+                                    <a href="#" class="btn btn-primary border-0 rounded-pill py-3 px-4 px-md-5 animated bounceInLeft">Learn More</a>
+                                </div>
+                                <div class="col-lg-5 col-md-12">
+                                    <img src="{% static 'images/45.png' %}" class="img-fluid rounded animated zoomIn" alt="Audit Tools">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-icon" aria-hidden="true">
+                    <i class="fas fa-chevron-left"></i>
+                </span>
+                <span class="visually-hidden"></span>
+            </button>
+        
+          
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-icon" aria-hidden="true">
+                    <i class="fas fa-chevron-right"></i>
+                </span>
+                <span class="visually-hidden"></span>
+            </button>
+        </div>
+        <!-- Carousel End -->
+
+
+
+        <!-- About Satrt -->
+        <div class="container-fluid py-6">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-5 wow bounceInUp" data-wow-delay="0.7s">
+                        <img src="{% static 'images/a2.webp' %}" class="img-fluid rounded" alt="Auditing Tool Image"style="border-radius: 100px;   height:390px">
+                    </div>
+                    <div class="col-lg-7 wow bounceInUp" data-wow-delay="0.3s">
+                        <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-custom rounded-pill px-4 py-1 mb-3">About Our Auditing Tool</small>
+                        <h2 class="display-5 mb-4">Trusted By 200 + Clients Worldwide</h2>
+                        <p class="mb-4">Our cutting-edge auditing tool is designed to revolutionize the way you conduct are audits. With advanced features and intuitive user interface, it's easier than ever to ensure compliance and efficiency in your auditing processes. Whether you're a small business or a large enterprise, our tool is tailored to meet your needs.</p>
+                        <div class="row g-4 text-dark mb-5">
+                            <div class="col-sm-6 mb-3 text-custom">
+                                <i class="fas fa-share text-custom me-2"></i>Advanced Audit Features
+                            </div>
+                            <div class="col-sm-6 mb-3 text-custom">
+                                <i class="fas fa-share text-custom me-2"></i>24/7 Technical Support
+                            </div>
+                            <div class="col-sm-6 mb-3 text-custom">
+                                <i class="fas fa-share text-custom me-2"></i>User-Friendly Interface
+                            </div>
+                            <div class="col-sm-6 mb-3 text-custom">
+                                <i class="fas fa-share text-custom me-2"></i>Secure Data Handling
+                            </div>
+                        </div>                                                                                             
+                        <a href="#" class="btn btn-primary py-3 px-5 rounded-pill">Learn More <i class="fas fa-arrow-right ps-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <!-- About End -->
+
+
+        <!-- Fact Start-->
+        <div class="container-fluid faqt py-6">
+            <div class="container">
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-7">
+                        <div class="row g-4">
+                            <div class="col-sm-4 wow bounceInUp" data-wow-delay="0.8s">
+                                <div class="faqt-item bg-custom rounded p-4 text-center">
+                                    <i class="fas fa-users fa-4x mb-4 text-white"></i>
+                                    <h1 class="display-4 fw-bold" data-toggle="counter-up">550</h1>
+                                    <p class="text-dark text-uppercase fw-bold mb-0">Satisfied Clients</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 wow bounceInUp" data-wow-delay="1s">
+                                <div class="faqt-item bg-custom rounded p-4 text-center">
+                                    <i class="fas fa-laptop-code fa-4x mb-4 text-white"></i>
+                                    <h1 class="display-4 fw-bold" data-toggle="counter-up">25</h1>
+                                    <p class="text-dark text-uppercase fw-bold mb-0">Audit Solutions</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 wow bounceInUp" data-wow-delay="1.5s">
+                                <div class="faqt-item bg-custom rounded p-4 text-center">
+                                    <i class="fas fa-check-double fa-4x mb-4 text-white"></i>
+                                    <h1 class="display-4 fw-bold" data-toggle="counter-up">300</h1>
+                                    <p class="text-dark text-uppercase fw-bold mb-0">Audits Completed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 wow bounceInUp" data-wow-delay="2s">
+                        <div class="video">
+                            <button type="button" class="btn btn-play" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/pkKO9ZNyOIc?si=U5y5tGyFj_4VJ0a1" data-bs-target="#videoModal">
+                                <span></span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>        
+        <!-- Modal Video -->
+        <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Youtube Video</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- 16:9 aspect ratio -->
+                        <div class="ratio ratio-16x9">
+                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/pkKO9ZNyOIc?si=U5y5tGyFj_4VJ0a1" id="video" allowfullscreen allowscriptaccess="always"
+                                allow="autoplay"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fact End -->
+
+
+        <!-- Service Start -->
+        <div class="container-fluid service py-6">
+            <div class="container">
+                <div class="text-center wow bounceInUp" data-wow-delay="3s">
+                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-primary rounded-pill px-4 py-1 mb-3">Our Services</small>
+                    <h1 class="display-5 mb-5">What We Offer</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="3.5s">
+                        <div class="bg-light rounded service-item">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-chart-line fa-7x text-custom mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Audit Analytics</h4>
+                                    <p class="mb-4">Unlock insights and trends in your audit data for smarter decision-making.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp mb-4" data-wow-delay="4s">
+                        <div class="bg-light rounded service-item">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-tasks fa-7x text-custom mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Compliance Management</h4>
+                                    <p class="mb-4">Ensure adherence to regulatory standards.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="4.5s">
+                        <div class="bg-light rounded service-item">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-file-alt fa-7x text-custom mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Documentation</h4>
+                                    <p class="mb-4">Efficiently manage audit documentation and track document versions.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="5s">
+                        <div class="bg-light rounded service-item">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-shield-alt fa-7x text-custom mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Risk Assessment</h4>
+                                    <p class="mb-4">Identify and mitigate risks effectively through comprehensive risk.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="5.1s">
+                        <div class="bg-light rounded service-item">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-shield-alt fa-7x text-custom mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Internal Controls</h4>
+                                    <p class="mb-4">Implement robust internal control mechanisms to safeguard assets and prevent fraud.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp mb-4" data-wow-delay="5.3s">
+                        <div class="bg-light rounded service-item" style="height: 390px;">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-tasks fa-7x text-custom mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Audit Planning</h4>
+                                    <p class="mb-4">Strategize and organize audit activities effectively for optimal outcomes and results.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="5.5s">
+                        <div class="bg-light rounded service-item">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-file-alt fa-7x text-custom-icon mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Reporting</h4>
+                                    <p class="mb-4">Generate comprehensive audit reports with actionable insights and recommendations.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 wow bounceInUp" data-wow-delay="5.7s">
+                        <div class="bg-light rounded service-item">
+                            <div class="service-content d-flex align-items-center justify-content-center p-4">
+                                <div class="service-content-icon text-center">
+                                    <i class="fas fa-graduation-cap fa-7x text-custom-icon mb-4" style="color: #006D77;"></i>
+                                    <h4 class="mb-3">Training and Development</h4>
+                                    <p class="mb-4">Empower your audit team with specialized training programs and skill.</p>
+                                    <a href="#" class="btn btn-primary px-4 py-2 rounded-pill">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Service End -->
+
+
+        <!-- Events Start -->
+        <div class="container-fluid event py-6">
+            <div class="container">
+                <div class="text-center wow bounceInUp" data-wow-delay="6s">
+                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-custom rounded-pill px-4 py-1 mb-3">Our Tools</small>
+                    <h1 class="display-5 mb-5">Explore Our Auditing Tools</h1>
+                </div>
+                <div class="tab-class text-center">
+                    <ul class="nav nav-pills d-inline-flex justify-content-center mb-5 wow bounceInUp" data-wow-delay="0.1s">
+                        <li class="nav-item p-2">
+                            <a class="d-flex mx-2 py-2 border border-custom bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">
+                                <span class="text-dark" style="width: 150px;">All Tools</span>
+                            </a>
+                        </li>
+                        <li class="nav-item p-2">
+                            <a class="d-flex py-2 mx-2 border border-custom bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
+                                <span class="text-dark" style="width: 150px;">Data Analytics</span>
+                            </a>
+                        </li>
+                        <li class="nav-item p-2">
+                            <a class="d-flex mx-2 py-2 border border-custom bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
+                                <span class="text-dark" style="width: 150px;">Risk Assessment</span>
+                            </a>
+                        </li>
+                        <li class="nav-item p-2">
+                            <a class="d-flex mx-2 py-2 border border-custom bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
+                                <span class="text-dark" style="width: 150px;">Compliance </span>
+                            </a>
+                        </li>
+                        <li class="nav-item p-2">
+                            <a class="d-flex mx-2 py-2 border border-custom bg-light rounded-pill" data-bs-toggle="pill" href="#tab-5">
+                                <span class="text-dark" style="width: 150px;">Internal Controls</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="tab-1" class="tab-pane fade show p-0 active">
+                        <div class="row g-4">
+                            <div class="col-lg-12">
+                                <div class="row g-4">
+                                    <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="6.2s">
+                                        <div class="event-img position-relative">
+                                            <img class="img-fluid rounded w-100" src="{% static 'images/1.avif' %}" alt="Data Analytics">
+                                            <div class="event-overlay d-flex flex-column p-4">
+                                                <h4 class="me-auto">Data Analytics Tools</h4>
+                                                <a href="{% static 'images/1.avif' %}" data-lightbox="data-analytics" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="6.3s">
+                                        <div class="event-img position-relative">
+                                            <img class="img-fluid rounded w-100" src="{% static 'images/2.avif' %}" alt="Risk Assessment">
+                                            <div class="event-overlay d-flex flex-column p-4">
+                                                <h4 class="me-auto">Risk Assessment Tools</h4>
+                                                <a href="{% static 'images/2.avif' %}" data-lightbox="risk-assessment" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="6.5s">
+                                        <div class="event-img position-relative">
+                                            <img class="img-fluid rounded w-100" src="{% static 'images/3.jpeg' %}" alt="Compliance Management">
+                                            <div class="event-overlay d-flex flex-column p-4">
+                                                <h4 class="me-auto">Compliance Audit Tools</h4>
+                                                <a href="{% static 'images/3.jpeg' %}" data-lightbox="compliance-management" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="6.7s">
+                                        <div class="event-img position-relative">
+                                            <img class="img-fluid rounded w-100" src="{% static 'images/4.jpg' %}" alt="Internal Controls">
+                                            <div class="event-overlay d-flex flex-column p-4">
+                                                <h4 class="me-auto">Internal Controls Tools</h4>
+                                                <a href="{% static 'images/4.jpg' %}" data-lightbox="internal-controls" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane fade show p-0">
+                            <div class="row g-4">
+                                <div class="col-lg-12">
+                                    <div class="row g-4">
+                                        <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="7.1s" >
+                                            <div class="event-img position-relative">
+                                                <img class="img-fluid rounded w-100" src="{% static 'images/5.avif' %}" alt="Audit Event 1">
+                                                <div class="event-overlay d-flex flex-column p-4">
+                                                    <h4 class="me-auto">Internal Audit Seminar</h4>
+                                                    <a href="{% static 'images/5.avif' %}" data-lightbox="audit-event-1" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="7.3s">
+                                            <div class="event-img position-relative">
+                                                <img class="img-fluid rounded w-100" src="{% static 'images/6.webp' %}" alt="Audit Event 2">
+                                                <div class="event-overlay d-flex flex-column p-4">
+                                                    <h4 class="me-auto">Compliance Workshop</h4>
+                                                    <a href="{% static 'images/6.webp' %}" data-lightbox="audit-event-2" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="7.5s">
+                                            <div class="event-img position-relative">
+                                                <img class="img-fluid rounded w-100" src="{% static 'images/7.jpg' %}" alt="Audit Event 1">
+                                                <div class="event-overlay d-flex flex-column p-4">
+                                                    <h4 class="me-auto">Internal Audit Seminar</h4>
+                                                    <a href="{% static 'images/7.jpg' %}" data-lightbox="audit-event-1" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-3 wow bounceInUp" data-wow-delay="7.9s">
+                                            <div class="event-img position-relative">
+                                                <img class="img-fluid rounded w-100" src="{% static 'images/8.webp' %}" alt="Audit Event 2">
+                                                <div class="event-overlay d-flex flex-column p-4">
+                                                    <h4 class="me-auto">Compliance Workshop</h4>
+                                                    <a href="{% static 'images/8.webp' %}" data-lightbox="audit-event-2" class="my-auto"><i class="fas fa-search-plus text-dark fa-2x"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Events End -->
+
+        <!-- Book Us Start -->
+        <div class="container-fluid contact py-6 wow bounceInUp" data-wow-delay="9.1s">
+            <div class="container">
+                <div class="row g-0">
+                    <div class="col-1">
+                        <img src="{% static 'images/1.avif' %}" class="img-fluid h-100 w-100 rounded-start" style="object-fit: cover; opacity: 0.7; margin-left: 27px;" alt="">
+                    </div>
+                    <div class="col-10">
+                        <div class="border-bottom border-top border-custom bg-light py-5 px-190" style="height: 500px;">
+                            <div class="text-center" style="color: #000000;">
+                                <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-custom rounded-pill px-4 py-1 mb-3">Book Us For Consultation</small>
+                                <h1 class="display-5 mb-5">Where you want Our Services</h1>
+                            </div>
+                            <div class="row g-4 form">
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <input type="text" class="form-control border-custom p-2" placeholder="Your Name">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <input type="mobile" class="form-control border-custom p-2" placeholder="Your Contact No.">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <input type="date" class="form-control border-custom p-2" placeholder="Select Date">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <input type="email" class="form-control border-custom p-2" placeholder="Enter Your Email">
+                                </div>
+                                <div class="col-lg-4 col-md-6 mb-3">
+                                    <select class="form-select border-custom p-2" aria-label="Default select example">
+                                        <option selected>Select Service</option>
+                                        <option value="1">Financial Audit</option>
+                                        <option value="2">Compliance Audit</option>
+                                        <option value="3">Risk Management</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 text-center" style="margin-top: 40px;">
+                                    <button type="submit" class="btn btn-custom px-5 py-3 rounded-pill">Submit Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <img src="{% static 'images/1.avif' %}" class="img-fluid h-100 w-100 rounded-end" style="object-fit: cover; opacity: 0.7; margin-left: -27px;" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Book Us End -->
+
+        
+        <!-- Team Start -->
+        <div class="container-fluid team py-6">
+            <div class="container">
+                <div class="text-center wow bounceInUp" data-wow-delay="11.1s">
+                    <small class="d-inline-block fw-bold text-dark text-uppercase bg-light border border-custom rounded-pill px-4 py-1 mb-3">Our Team</small>
+                    <h1 class="display-5 mb-5" >Meet Our Expert Team</h1>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="11.3s">
+                        <div class="team-item rounded">
+                            <img class="img-fluid rounded-top" src="{% static 'images/p1.avif' %}" alt="">
+                            <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                                <h4 class="text-custom">John Doe</h4>
+                                <p class="text-white mb-0">Chief Auditor</p>
+                            </div>
+                            <div class="team-icon d-flex flex-column justify-content-center m-4">
+                                <a class="share btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="11.6s">
+                        <div class="team-item rounded">
+                            <img class="img-fluid rounded-top" src="{% static 'images/p3.jpg' %}" alt="">
+                            <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                                <h4 class="text-custom">Jane Smith</h4>
+                                <p class="text-white mb-0">Senior Auditor</p>
+                            </div>
+                            <div class="team-icon d-flex flex-column justify-content-center m-4">
+                                <a class="share btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="11.9s">
+                        <div class="team-item rounded">
+                            <img class="img-fluid rounded-top" src="{% static 'images/p2.avif' %}" alt="">
+                            <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                                <h4 class="text-custom">Michael Brown</h4>
+                                <p class="text-white mb-0">Audit Analyst</p>
+                            </div>
+                            <div class="team-icon d-flex flex-column justify-content-center m-4">
+                                <a class="share btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 wow bounceInUp" data-wow-delay="11.3s">
+                        <div class="team-item rounded">
+                            <img class="img-fluid rounded-top" src="{% static 'images/p4.avif' %}" alt="">
+                            <div class="team-content text-center py-3 bg-dark rounded-bottom">
+                                <h4 class="text-custom">Emily Johnson</h4>
+                                <p class="text-white mb-0">Audit Associate</p>
+                            </div>
+                            <div class="team-icon d-flex flex-column justify-content-center m-4">
+                                <a class="share btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fas fa-share-alt"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-twitter"></i></a>
+                                <a class="share-link btn btn-custom btn-md-square rounded-circle mb-2" href=""><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+        
+        <!-- Footer Start -->
+        <div class="container-fluid footer py-6 my-6 mb-0 bg-light wow bounceInUp" data-wow-delay="0.1s">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h1 class="text-custom">Audit<span class="text-dark">Nest</span></h1>
+                            <p class="lh-lg mb-4">Empowering auditors with cutting-edge tools and resources for streamlined and efficient audits. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <div class="footer-icon d-flex">
+                                <a class="btn btn-primary btn-sm-square me-2 rounded-circle" href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-primary btn-sm-square me-2 rounded-circle" href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="btn btn-primary btn-sm-square me-2 rounded-circle"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="btn btn-primary btn-sm-square rounded-circle"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="mb-4">Key Features</h4>
+                            <div class="d-flex flex-column align-items-start">
+                                <a class="text-body mb-3" href="#"><i class="fa fa-check text-custom me-2"></i>Advanced Data Analytics</a>
+                                <a class="text-body mb-3" href="#"><i class="fa fa-check text-custom me-2"></i>Integrated Compliance Checks</a>
+                                <a class="text-body mb-3" href="#"><i class="fa fa-check text-custom me-2"></i>Real-time Reporting</a>
+                                <a class="text-body mb-3" href="#"><i class="fa fa-check text-custom me-2"></i>Customizable Templates</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="mb-4">Contact Us</h4>
+                            <div class="d-flex flex-column align-items-start">
+                                <p><i class="fa fa-map-marker-alt text-custom me-2"></i> 123 Main Street, New York, USA</p>
+                                <p><i class="fa fa-phone-alt text-custom me-2"></i> (+123) 4567 8901</p>
+                                <p><i class="fas fa-envelope text-custom me-2"></i> info@audittools.com</p>
+                                <p><i class="fa fa-clock text-custom me-2"></i> 24/7 Support</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h1 class="text-custom">Audit<span class="text-dark">Nest</span></h1>
+                            <p class="lh-lg mb-4">Empowering auditors with cutting-edge tools and resources for streamlined and efficient audits. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                            <div class="footer-icon d-flex">
+                                <a class="btn btn-primary btn-sm-square me-2 rounded-circle" href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-primary btn-sm-square me-2 rounded-circle" href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="btn btn-primary btn-sm-square me-2 rounded-circle"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="btn btn-primary btn-sm-square rounded-circle"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <!-- Footer End -->
+
+
+        <!-- Copyright Start -->
+        <div class="container-fluid copyright bg-dark py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 my-auto text-center text-md-end text-white">
+                        Designed By Aiswarya😊
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-md-square btn-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
+
+        
+      
+        
+    </div>
+</body>
+</html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+    <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
+    
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+   
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(function() {
+                var loadingDiv = document.querySelector('.loading');
+                loadingDiv.style.opacity = '0';
+                setTimeout(function() {
+                    loadingDiv.style.display = 'none';
+                    var containerDiv = document.querySelector('.containerbox');
+                    containerDiv.style.display = 'block';
+                    containerDiv.classList.add('loaded');
+                }, 500); 
+            }, 5000); 
+        });
+    </script>
+    <script>
+        new WOW().init();
+    </script>
+     
+</body>
+
+</html>
